@@ -1,5 +1,5 @@
 {
-    "name": "laravel-admin-ext/log-viewer",
+    "name": "laravel-admin-ext/log-viewer2",
     "description": "Log viewer for laravel",
     "type": "library",
     "keywords": ["laravel-admin", "log", "viewer"],
