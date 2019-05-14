@@ -51,7 +51,7 @@ class LogViewer extends Extension
      *
      * @param null $file
      */
-    public function __construct($file = null)
+    public function __construct($dirictory = null,$file = null)
     {
         if (is_null($file)) {
             $file = $this->getLastModifiedLog();
@@ -59,7 +59,7 @@ class LogViewer extends Extension
 
         $this->file = $file;
 
-        $this->getFilePath();
+        $this->getFilePath($dirictory);
     }
 
     /**
@@ -69,10 +69,14 @@ class LogViewer extends Extension
      *
      * @return string
      */
-    public function getFilePath()
+    public function getFilePath($dirictory = null)
     {
         if (!$this->filePath) {
-            $path = sprintf(storage_path('logs/%s'), $this->file);
+            if($dirictory){
+                $path = sprintf(storage_path("logs/{$dirictory}/%s"), $this->file);
+            }else {
+                $path = sprintf(storage_path('logs/%s'), $this->file);
+            }
 
             if (!file_exists($path)) {
                 throw new \Exception('log not exists!');
@@ -101,11 +105,20 @@ class LogViewer extends Extension
      *
      * @return array
      */
-    public function getLogFiles($count = 20)
+    public function getLogFiles($dirictory = null,$count = 20)
     {
-        $files = glob(storage_path('logs/*'));
+        if($dirictory){
+            $files = glob(storage_path("logs/{$dirictory}/*"));
+        }else {
+            $files = glob(storage_path('logs/*'));
+        }
         $files = array_combine($files, array_map('filemtime', $files));
         arsort($files);
+        foreach ($files as $k=>$file){
+            if(!is_file($k)){
+                unset($files[$k]);
+            }
+        }
 
         $files = array_map('basename', array_keys($files));
 
@@ -117,9 +130,13 @@ class LogViewer extends Extension
      *
      * @return string
      */
-    public function getLastModifiedLog()
+    public function getLastModifiedLog($dirictory = null)
     {
-        $logs = $this->getLogFiles();
+        if($dirictory){
+            $logs = $this->getLogFiles($dirictory);
+        }else {
+            $logs = $this->getLogFiles();
+        }
 
         return current($logs);
     }

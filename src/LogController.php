@@ -12,23 +12,25 @@ class LogController extends Controller
     public function index($file = null, Request $request)
     {
         if ($file === null) {
-            $file = (new LogViewer())->getLastModifiedLog();
+            $path = $request->get('path');
+            $file = (new LogViewer())->getLastModifiedLog($path);
         }
 
         return Admin::content(function (Content $content) use ($file, $request) {
+            $path = $request->get('path');
             $offset = $request->get('offset');
 
-            $viewer = new LogViewer($file);
+            $viewer = new LogViewer($path,$file);
 
             $content->body(view('laravel-admin-logs::logs', [
                 'logs'      => $viewer->fetch($offset),
-                'logFiles'  => $viewer->getLogFiles(),
+                'logFiles'  => $viewer->getLogFiles($path,30),
                 'fileName'  => $viewer->file,
                 'end'       => $viewer->getFilesize(),
                 'tailPath'  => route('log-viewer-tail', ['file' => $viewer->file]),
                 'prevUrl'   => $viewer->getPrevPageUrl(),
                 'nextUrl'   => $viewer->getNextPageUrl(),
-                'filePath'  => $viewer->getFilePath(),
+                'filePath'  => $viewer->getFilePath($path),
                 'size'      => static::bytesToHuman($viewer->getFilesize()),
             ]));
 
