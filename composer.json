@@ -3,7 +3,7 @@
     "description": "Log viewer for laravel",
     "type": "library",
     "keywords": ["laravel-admin", "log", "viewer"],
-    "homepage": "https://github.com/laravel-admin-extensions/log-viewer",
+    "homepage": "https://github.com/laravel-admin-extensions/log-viewer2",
     "license": "MIT",
     "authors": [
         {
