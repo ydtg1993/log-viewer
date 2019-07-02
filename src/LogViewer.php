@@ -32,6 +32,8 @@ class LogViewer extends Extension
      */
     protected $pageOffset = [];
 
+    protected $dirictory = null;
+
     /**
      * @var array
      */
@@ -58,7 +60,7 @@ class LogViewer extends Extension
         }
 
         $this->file = $file;
-
+        $this->dirictory = $dirictory;
         $this->getFilePath($dirictory);
     }
 
@@ -152,6 +154,12 @@ class LogViewer extends Extension
             return false;
         }
 
+        if($this->dirictory){
+            return route('log-viewer-file', [
+                'file' => $this->file, 'offset' => $this->pageOffset['end'],'path'=>$this->dirictory,
+            ]);
+        }
+
         return route('log-viewer-file', [
             'file' => $this->file, 'offset' => $this->pageOffset['end'],
         ]);
@@ -166,6 +174,12 @@ class LogViewer extends Extension
     {
         if ($this->pageOffset['start'] == 0) {
             return false;
+        }
+
+        if($this->dirictory){
+            return route('log-viewer-file', [
+                'file' => $this->file, 'offset' =>  -$this->pageOffset['start'],'path'=>$this->dirictory,
+            ]);
         }
 
         return route('log-viewer-file', [
